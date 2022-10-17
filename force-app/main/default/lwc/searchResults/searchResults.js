@@ -1,7 +1,8 @@
 import { LightningElement,track, api ,wire } from 'lwc';
 import { subscribe,publish, MessageContext } from 'lightning/messageService';
 import beebetterChannel from '@salesforce/messageChannel/beebetterChannel__c';
-import searchResults from '@salesforce/apex/searchresultController.searchResults';
+import searchResults from '@salesforce/apex/searchResultController.searchResults';
+import getAllProducts from '@salesforce/apex/searchResultController.getAllProducts';
 
 export default class SearchResults extends LightningElement {
     @track
