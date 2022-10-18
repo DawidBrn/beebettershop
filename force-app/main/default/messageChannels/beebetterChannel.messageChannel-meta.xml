@@ -8,7 +8,7 @@
     </lightningMessageFields>
     <lightningMessageFields>
         <description>This is the search query provided by user</description>
-        <fieldName>searchTerm</fieldName>
+        <fieldName>searchQuery</fieldName>
     </lightningMessageFields>
     <masterLabel>beebetterChannel</masterLabel>
 </LightningMessageChannel>

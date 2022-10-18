@@ -7,7 +7,7 @@ export default class SearchBar extends LightningElement {
     messageContext;
 
     isLoading = false;
-    searchTerm;
+    searchTerm = '';
     handleLoading() {
         this.isLoading = true;
     }
@@ -19,9 +19,10 @@ export default class SearchBar extends LightningElement {
         this.searchTerm = event.target.value;
     }
     setSearch() {
-        const value = {
-            searchTerm : this.searchTerm
+        const prod = {
+            searchQuery : this.searchTerm
         };
-        publish(this.messageContext, beebetterChannel, value);
+        console.log('searchbar text ' + this.searchTerm);
+        publish(this.messageContext, beebetterChannel, prod);
     }
 }

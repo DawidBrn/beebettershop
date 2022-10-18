@@ -5,16 +5,17 @@ import searchByName from '@salesforce/apex/searchResultController.searchByName';
 import getAllProducts from '@salesforce/apex/searchResultController.getAllProducts';
 
 export default class SearchResults extends LightningElement {
-    @track
-    pricebookEntries;
-    isLoading = false;
-
     subscription = null;
 
     @wire(MessageContext)
     messageContext;
 
     searchTerm;
+
+    @track
+    pricebookEntries;
+    products = true;
+    isLoading = false;
 
     @api
     selectedProduct;
@@ -36,13 +37,24 @@ export default class SearchResults extends LightningElement {
     handleMessage(message) {
         this.isLoading = true;
         this.notifyLoading(this.isLoading);
-        this.searchTerm = message.searchTerm;
+        this.searchTerm = message.searchQuery;
     }
-    @wire(searchByName,{
-        term : '$searchTerm'
-    })getProducts(result){
+
+    @wire(searchByName,{term : '$searchTerm'})
+    getProducts(result){
+        console.log(result);
+        this.products = false;
         this.pricebookEntries = result;
-        this.notifyLoading(false);
+        
+    }
+
+    @wire(getAllProducts)
+    getAllProducts({data}){
+        if(data){
+            this.products = true;
+            console.log(data);
+            this.pricebookEntries = data;
+        }
     }
 
     notifyLoading(isLoading) {
@@ -52,10 +64,7 @@ export default class SearchResults extends LightningElement {
             this.dispatchEvent(new CustomEvent('doneloading'));
         }
     }
-    updateSelectedTile(event) {
-        this.selectedProduct = event.detail.prodId;
-        this.sendMessageService(this.selectedProduct)
-    }
+    
     sendMessageService(prodId) {
         publish(this.messageContext, beebetterChannel, {recordId: prodId});
     }
