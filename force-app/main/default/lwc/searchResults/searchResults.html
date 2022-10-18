@@ -1,3 +1,20 @@
 <template>
-    
+    <template if:true={pricebookEntries.data}>
+        <div class="slds-scrollable_y">
+            <lightning-layout horizontal-align="center" multiple-rows>
+                <template for:each={pricebookEntries.data} for:item="prod">
+                    <lightning-layout-item key={prod.Id} padding="around-small" size="12" small-device-size="6"
+                                           medium-device-size="4" large-device-size="3" class="div-wrap">
+                        <c-productTile
+                                prod={prod}
+                                oncarselect={updateSelectedTile}>
+                        </c-productTile>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </div>
+    </template>
+    <!-- <template if:true={emptyResults}>
+        <h2>There is no records based on such criteria.</h2>
+    </template> -->
 </template>

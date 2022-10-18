@@ -18,7 +18,7 @@ export default class SearchBar extends LightningElement {
     handleSearch(event) {
         this.searchTerm = event.target.value;
     }
-    setSearchKey() {
+    setSearch() {
         const value = {
             searchTerm : this.searchTerm
         };
