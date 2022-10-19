@@ -1,5 +1,4 @@
 <template>
-    <h1 class="slds-truncate slds-text-heading_large slds-m-right_xx-small">Search</h1>
     <header>
         <div class="myheader">
             <lightning-input type="text" label=" "
@@ -7,10 +6,11 @@
                              onchange={handleSearch}
                              class="myheader">
             </lightning-input>
-
+            
             <div onclick={setSearch}
-                 class="search-button">Search
+                 class="slds-button slds-button_neutral" style="height: 50%;">Search
             </div>
+        
         </div>
     </header>
     <div>

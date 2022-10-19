@@ -1,10 +1,23 @@
 <template>
-    
-      <div style={backgroundStyle} class="tile"></div>
-      <div class="lower-third">
-        <img src={product.Product2.DisplayUrl} height="300" width="160"/>
-        <h1 class="slds-truncate slds-text-heading_medium">{product.Product2.Name}</h1>
-        <lightning-formatted-number maximum-fraction-digits="2" format-style="currency" currency-code="USD" value={product.UnitPrice}> </lightning-formatted-number>
-      </div>
+      <lightning-card>
+        
+        <h2 slot="title" >
+          
+        </h2>
+      
+        <div slot="footer">
+                <lightning-badge label="Rating"></lightning-badge>
+        </div>
+        <div class="slds-align_absolute-center slds-text-heading_medium">
+          {product.Product2.Name}
+        </div>
+        <p class="slds-p-horizontal_small">
+          <img class="slds-align_absolute-center" src={product.Product2.DisplayUrl} height="300" width="160"/>
+          <lightning-formatted-number class="slds-align_absolute-center slds-m-around_small"  maximum-fraction-digits="2" format-style="currency" currency-code="USD" value={product.UnitPrice}> </lightning-formatted-number>
+        </p>
+        <div class="slds-align_absolute-center">
+          <lightning-button label="See Details"  onclick={selectProduct}></lightning-button>
+        </div>
+    </lightning-card>
     
   </template>

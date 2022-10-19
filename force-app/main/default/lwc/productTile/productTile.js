@@ -7,9 +7,9 @@ export default class ProductTile extends LightningElement {
     product;
     @api
     selectedProduct;
-    // get backgroundStyle() {
-    //     console.log(this.product.Product2.Product);
-    //     return 'background-image:url(' + this.product.Product2.Product_Picture_URL__c + ')';
-    // }
+    
+    selectProduct(){
+        console.log(this.product.Product2Id);
+    }
 
 }

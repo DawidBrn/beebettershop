@@ -1,5 +1,12 @@
 <template>
+    <template if:true={resultsData}>
+        <div style="text-align: center;"></div>
+        <h1>No matches found.</h1>
+    </template>
     <template if:true={pricebookEntries.data}>
+        <div>
+            <h2>No. of Results : {resultSize}</h2>
+        </div>
         <div class="slds-scrollable_y">
             <lightning-layout horizontal-align="center" multiple-rows>
                 <template for:each={pricebookEntries.data} for:item="prod">
@@ -24,7 +31,5 @@
             </lightning-layout>
         </div>
     </template>
-    <!-- <template if:true={emptyResults}>
-        <h2>There is no records based on such criteria.</h2>
-    </template> -->
+    
 </template>

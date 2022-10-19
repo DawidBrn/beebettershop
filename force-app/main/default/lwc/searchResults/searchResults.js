@@ -14,14 +14,17 @@ export default class SearchResults extends LightningElement {
 
     @track
     pricebookEntries;
+    @track
+    resultsData = false;
+    @track
+    resultSize;
     products = true;
     isLoading = false;
 
     @api
     selectedProduct;
 
-    @track
-    emptyResults = false;
+   
 
     connectedCallback() {
         this.subToMessageChannel();
@@ -45,7 +48,19 @@ export default class SearchResults extends LightningElement {
         console.log(result);
         this.products = false;
         this.pricebookEntries = result;
+        this.checkForResults(result);
         
+    }
+    checkForResults(result){
+        if(result !== 'undefined'){
+            if(result.data.length < 1){
+                this.resultsData = true;
+                this.resultSize = 0;
+            }else{
+                this.resultsData = false;
+                this.resultSize = result.data.length;
+            }
+        }
     }
 
     @wire(getAllProducts)
@@ -54,6 +69,8 @@ export default class SearchResults extends LightningElement {
             this.products = true;
             console.log(data);
             this.pricebookEntries = data;
+            this.checkForResults(data);
+
         }
     }
 
