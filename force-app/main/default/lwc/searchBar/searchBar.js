@@ -2,7 +2,14 @@ import {LightningElement, wire, track} from 'lwc';
 import { subscribe,publish, MessageContext } from 'lightning/messageService';
 import beebetterChannel from '@salesforce/messageChannel/beebetterChannel__c';
 
+import search from '@salesforce/label/c.Search_button';
+
 export default class SearchBar extends LightningElement {
+
+    label = {
+        search,
+    };
+
     @wire(MessageContext)
     messageContext;
 

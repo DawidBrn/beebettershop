@@ -1,23 +1,24 @@
 <template>
+    <div class="hover-item">
       <lightning-card>
-        
-        <h2 slot="title" >
-          
-        </h2>
-      
-        <div slot="footer">
-                <lightning-badge label="Rating"></lightning-badge>
-        </div>
-        <div class="slds-align_absolute-center slds-text-heading_medium">
-          {product.Product2.Name}
-        </div>
+        <h2 slot="title" ></h2>
+        <a href="#" class="border-button" onclick={selectProduct}>
+          <div class="slds-align_absolute-center slds-text-heading_large">
+            {product.Product2.Name}
+          </div>
+        <div style="font-size:30px;">
         <p class="slds-p-horizontal_small">
-          <img class="slds-align_absolute-center" src={product.Product2.DisplayUrl} height="300" width="160"/>
-          <lightning-formatted-number class="slds-align_absolute-center slds-m-around_small"  maximum-fraction-digits="2" format-style="currency" currency-code="USD" value={product.UnitPrice}> </lightning-formatted-number>
+          <img onclick={selectProduct} class="slds-align_absolute-center" src={product.Product2.DisplayUrl} height="300" width="160"/>
+          <lightning-formatted-number class="slds-align_absolute-center slds-m-around_small"  maximum-fraction-digits="2" format-style="currency" currency-code="EUR" value={product.UnitPrice}> </lightning-formatted-number>
         </p>
-        <div class="slds-align_absolute-center">
-          <lightning-button label="See Details"  onclick={selectProduct}></lightning-button>
         </div>
-    </lightning-card>
-    
+        </a>
+          <div class="slds-align_absolute-center" onclick={selectProduct}>
+            <lightning-button label={label.seedetails} ></lightning-button>
+          </div>
+          <div slot="footer">
+            <lightning-badge label={label.rating}></lightning-badge>
+          </div>
+      </lightning-card>
+    </div>
   </template>

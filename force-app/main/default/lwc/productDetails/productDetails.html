@@ -1,0 +1,67 @@
+<template>
+      <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
+      </template>
+        <main class="container">
+          <div class="left-column">
+            <img src={details_img} alt="">
+          </div>
+          <div class="right-column">
+            <div class="product-description">
+              <span>{family}</span>
+              <h1>{name}</h1>
+            </div>
+            <div class="product-price">
+                <form class="slds-m-vertical_medium">
+                    <ul class="slds-list_horizontal">
+                        <li class="btn" onclick={decQuantity}>-</li>
+                        <li><input class="input-style" min="1" type="number" id="number" value={quantity} /></li>
+                        <li><div class="btn" onclick={incQuantity}>+</div></li>
+                    </ul>
+                </form>
+                <br>
+                <span style="font-size: 30px;">
+                    <lightning-formatted-number class="slds-align_absolute-center slds-m-around_small" 
+                     maximum-fraction-digits="2" format-style="currency" currency-code="USD" value={price}> 
+                    </lightning-formatted-number>
+                </span>
+                <br>
+                <div onclick={addItemToCart} class="slds-button slds-button_brand">{label.addtocart}</div>
+              </div>
+    
+            <div class="product-configuration">
+    
+              <div class="cable-config">
+                <span>{label.faq}</span>
+                <br>
+                <a href="#" title="Dosage">{label.dosage}</a>
+                <br>
+                <a href="#" title="Shipping and complaints">{label.shippingandcomplatins}</a>
+                <br>
+                <a href="#" title="Storage">{label.storingdrugsandsupps}</a>
+              </div>
+            </div>
+
+          </div>
+        </main>
+        <div class="slds-grid">
+          <div class="slds-col slds-size_7-of-12">
+            <lightning-accordion active-section-name="A">
+              <lightning-accordion-section name="A" label={label.description}
+                  ><div style="text-align: justify;">{desc}</div></lightning-accordion-section
+              >
+              <lightning-accordion-section name="B" label={label.recommendeduse}
+                  >This is the content area for section B</lightning-accordion-section
+              >
+              <lightning-accordion-section name="C" label={label.componentsofprod}
+                  >This is the content area for section C</lightning-accordion-section
+              >
+          </lightning-accordion>
+          </div>
+          <div class="slds-col slds-size_5-of-12">
+            <div class="slds-card">
+              Reviews & comments
+            </div>
+          </div>
+        </div>
+</template>

@@ -14,5 +14,14 @@
     cursor: pointer;
     padding: 5px;
   }
-  
+  .hover-item{
+    background-color:white;
+    border: 1px solid transparent;
+  }
+  .hover-item:hover{
+    background-color: rgb(250, 243, 243);
+    border: 2px solid rgb(154, 246, 62);
+    border-radius: 4px;
+    
+  }
   
