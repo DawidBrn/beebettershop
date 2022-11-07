@@ -1,0 +1,110 @@
+<template>
+    <div class=" slds-card container">
+        
+    <div class="left-column"> 
+    <div class="slds-m-around_medium slds-box">
+        <lightning-card title="PriceBooks" icon-name="utility:price_books">
+        <template if:true={data}>
+            <lightning-datatable
+                    data={data}
+                    columns={pricebookColumns}
+                    key-field="id"
+                    max-row-selection="1"
+                    onrowselection={getSelectedRowPriceBook}>
+            </lightning-datatable>
+        </template>
+    </lightning-card>
+    <div class="slds-align_absolute-center">
+    <lightning-button-group >
+        <lightning-button label="New" icon-name="utility:new" onclick={openPricebookModal}></lightning-button>
+        <lightning-button label="Edit" icon-name="utility:edit"></lightning-button>
+        <lightning-button label="Delete" variant="destructive" onclick={deletePricebk} icon-name="utility:delete" ></lightning-button>
+    </lightning-button-group>
+    </div>
+    </div>
+    </div>
+    <div class="right-column">
+        <div class="slds-m-around_medium slds-box">
+            <lightning-card title="Products" icon-name="utility:product_service_campaign">
+            <template if:true={products}>
+                <c-salesforce-codex-data-table
+                key-field="id"
+                data={products}
+                columns={productColumns}
+                onrowselection={getSelectedRowProduct}>
+ </c-salesforce-codex-data-table>
+            </template>
+        </lightning-card>
+        <div class="slds-p-around_medium">
+            <div class="slds-text-body_regular slds-p-bottom_medium"></div>
+            <lightning-button variant="brand"
+                              label="Create new Entries"
+                              title="Create new Entries"
+                              onclick={addProductsToPricebook}>
+            </lightning-button>
+        </div>
+        </div>
+    </div>
+</div>
+<template if:true={isNewPricebookModalOpen}>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+             aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={closePricebookModal}>
+                    <lightning-icon icon-name="utility:close"
+                                    alternative-text="close"
+                                    variant="inverse"
+                                    size="small" ></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">
+                    Create new Pricebook</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-form-element slds-m-vertical_small">
+                    <label class="slds-form-element__label" for="select-01">
+                        <abbr class="slds-required" title="required">* </abbr>Name</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input id="form-element-01" type="text" placeholder="Pricebook name" 
+                                         onchange={handleDiscountName}></lightning-input>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-vertical_small">
+                    <label class="slds-form-element__label" for="select-01">
+                        <abbr class="slds-required" title="required">* </abbr>Select Discount Type</label>
+                    <div class="slds-form-element__control">
+                        <lightning-combobox
+                                id="select-01"
+                                name="progress"
+                                value={discountType}
+                                placeholder="Discount Type"
+                                options={options}
+                                onchange={handleDiscountType}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-vertical_small">
+                    <label class="slds-form-element__label" for="text-input-id-47">
+                        <abbr class="slds-required" title="required">* </abbr>Value Of Discount</label>
+                    <div class="slds-form-element__control">
+                        <lightning-input type="number" name="seven" value={discountValue}
+                                         id="text-input-id-47"
+                                         onchange={handleDiscountValue}
+                                         placeholder="Discount Value"
+                                         ></lightning-input>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick={closePricebookModal}
+                        title="Cancel">Cancel</button>
+                <button class="slds-button slds-button_brand" onclick={createPricebook}
+                        title="Create">Create</button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
+</template>

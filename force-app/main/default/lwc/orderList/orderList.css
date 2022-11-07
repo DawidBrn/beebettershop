@@ -1,0 +1,40 @@
+.div-class-orders {
+    margin-bottom: 20px;
+}
+
+.slds-truncate {
+    color: rgb(0, 0, 0);
+}
+
+h1 {
+    font-weight: 700;
+    text-align: center;
+    padding: 20px 0;
+}
+
+h2 {
+    font-weight: 700;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+}
+
+.style-img-orders {
+    width: 500px;
+}
+
+.style-orders {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.div-class-order-details {
+    display: flex;
+    flex-direction: column;
+}
+.div-class-order-details > * {
+    padding-bottom: 5px ;
+}

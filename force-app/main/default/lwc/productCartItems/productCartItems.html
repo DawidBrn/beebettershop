@@ -1,0 +1,309 @@
+<template>
+  <div class="slds-border_top slds-border_bottom slds-text-heading_large slds-align_absolute-center">
+    Cart
+  </div>
+  
+  <template if:true={showToastBar}>
+    <div class="slds-m-top_large">
+    <div class="slds-notify_container">
+        <div class={outerClass} role="status">
+            <span class="slds-assistive-text">{type}</span>
+            <span class={innerClass} title={message}>
+                <lightning-icon icon-name={getIconName} alternative-text="icon" styleclass="slds-icon slds-icon_small" variant="inverse" size="small"></lightning-icon>
+            </span>
+            <div class="slds-notify__content">
+                <h2 class="slds-text-heading_small">
+                    <lightning-formatted-rich-text value={message}>
+                    </lightning-formatted-rich-text>
+                </h2>
+            </div>
+            <div class="slds-notify__close">
+                <lightning-button-icon icon-name="utility:close" size="small" variant="border-filled" class="slds-button slds-button_icon slds-button_icon-inverse" alternative-text="next" onclick={closeModel} ></lightning-button-icon>
+            </div>
+        </div>
+    </div>
+  </div>
+</template>
+<template if:true={cartFlag}>
+            <template if:true={isShowModal}>
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+          <div class="slds-modal__container">
+            <header class="slds-modal__header">
+              <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={hideModalBox}>
+                  <lightning-icon icon-name="utility:close"
+                    alternative-text="close"
+                    variant="inverse"
+                    size="small" ></lightning-icon>
+                  <span class="slds-assistive-text">Close</span>
+              </button>
+              <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Warning</h2>
+            </header>
+
+            <!-- modal body start -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                  <p>Are you sure you want to delete all items from your cart?</p>
+            </div>
+
+            <!-- modal footer start-->
+            <footer class="slds-modal__footer">
+              <button class="slds-button slds-button_neutral" onclick={hideModalBox}>Cancel</button>
+              <button class="slds-button slds-button_destructive" onclick={emptyCart}>Delete</button>
+            </footer>
+
+          </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+          </template>
+
+        <main class="container">
+          <template if:true={isLoading}>
+            <lightning-spinner class="spinner" size="large" alternative-text="Loading" variant="brand"></lightning-spinner>
+          </template>
+          
+          <div class="left-column slds-scrollable_y " style="height:55rem;">
+            <div>
+            <template for:each={checkoutItems} for:index="index" for:item="item">
+              <div class="slds-card slds-p-around_medium" key={item.cartItem_Id}>
+                <div class="slds-text-heading_medium slds-align_absolute-center">
+                  <ul>
+                    <li>
+                      <a data-key={item.cartItem_Id} onclick={goToItem}>{item.cartItem_Name}</a><br>
+                    </li>
+                    <li><div class=" slds-align_absolute-center">
+                      {item.cartItem_Family}
+                    </div></li>
+                  </ul>
+                </div>
+                <div class="container slds-clearfix">
+                <div class="left-column2">
+                  <lightning-layout class="slds-m-around_small">
+                    <lightning-layout-item>
+                      <ul class="slds-list_horizontal slds-m-left_medium">
+                        <li class="btn" onclick={decQuantity} data-index={index} data-id={item.cartItem_Id}>-</li>
+                        <li><input class="input-style" min="1" type="number" value={item.cartItem_Quantity} /></li>
+                        <li><div class="btn" onclick={incQuantity} data-index={index} data-id={item.cartItem_Id}>+</div></li>
+                    </ul>
+                    </lightning-layout-item>
+                    <lightning-layout-item>
+                      <lightning-formatted-number style="font-size: 25px;"  class="slds-float_right slds-m-left_large"
+                      maximum-fraction-digits="2" format-style="currency" currency-code="EUR" value={item.cartItem_CostItem}> 
+                      </lightning-formatted-number>
+                    </lightning-layout-item>
+                    <lightning-layout-item padding="horizontal-large">
+                      <div style="height: 40px;width:40px;">
+                      <button onclick={deleteFromCart} data-oiid={item.cartItem_orderItemId} data-index={index} 
+                       class="slds-button slds-button_destructive">Delete</button>
+                      </div>
+                    </lightning-layout-item>
+                        
+                      
+                  </lightning-layout>
+                 </div>
+                 <div class="right-column2 slds-m-left_xx-large">
+                  <img src={item.cartItem_Display_URL} style="max-height:100px;max-width:100px;" class="slds-m-bottom_medium slds-m-left_xx-large ">
+                 </div>
+                </div>
+              </div>
+            </template>
+          </div>
+          </div>
+           
+          <div class="right-column">
+            <div class="product-description slds-m-top_xx-large">
+              <template if:false={confirmation}>
+              <template if:false={cartState}> 
+                <div class="slds-border_top slds-border_bottom ">
+                  <lightning-progress-indicator
+                    current-step="1"
+                    type="base"
+                    has-error={error}>
+                    <lightning-progress-step
+                        label="Item summary"
+                        value="1"
+                    ></lightning-progress-step>
+                    <lightning-progress-step
+                        label="Shipping summary"
+                        value="2"
+                    ></lightning-progress-step>
+                    <lightning-progress-step
+                        label="Confirmation"
+                        value="3"
+                    ></lightning-progress-step>
+                </lightning-progress-indicator>
+                </div>
+                <div class="product-price slds-border_bottom slds-clearfix slds-m-top_xx-large">
+                  <ul>
+                    <li>
+                      <ul>
+                      <template for:each={checkoutItems} for:index="index" for:item="item">
+                        <li key={item.cartItem_Id}>
+                        <div class="slds-grid">
+                          <div class="slds-col slds-size_10-of-12">
+                            <div >
+                            {item.cartItem_Name}
+                            </div>
+                          </div>
+                            <div class="slds-col slds-size_2-of-12">
+                              <div>
+                                <lightning-formatted-number class="slds-float_right"
+                                maximum-fraction-digits="2" format-style="currency" currency-code="EUR" value={item.cartItem_CostItem}> 
+                                </lightning-formatted-number>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        </template>
+                      </ul>
+                    </li>
+                      <div class="slds-grid">
+                        <div class="slds-col slds-size_10-of-12">
+                          <div class="slds-border_top" style="font-size:25px;">
+                          Total
+                        </div>
+                        </div>
+                        <div class="slds-col slds-size_2-of-12">
+                          <div style="font-size:30px;float:right;">
+                            <lightning-formatted-number class="slds-float_right"
+                             maximum-fraction-digits="2" format-style="currency" currency-code="EUR" value={summaryCost}> 
+                            </lightning-formatted-number>
+                          </div>
+                        </div>
+                      </div>
+                  </ul>
+                </div>
+                <div class="slds-m-around_medium slds-align_absolute-center">
+                  <button class=" slds-button slds-button_destructive" 
+                  onclick={showModalBox} >Empty the Cart</button>
+                <button class=" slds-button slds-button_outline-brand" 
+                onclick={next} >Next</button>
+              </div></template>
+              <template if:true={cartState}><div>
+                <div class="slds-border_top slds-border_bottom ">
+                  <lightning-progress-indicator
+                    current-step="2"
+                    type="base"
+                    has-error={error}>
+                    <lightning-progress-step
+                        label="Item summary"
+                        value="1"
+                    ></lightning-progress-step>
+                    <lightning-progress-step
+                        label="Shipping summary"
+                        value="2"
+                    ></lightning-progress-step>
+                    <lightning-progress-step
+                        label="Confirmation"
+                        value="3"
+                    ></lightning-progress-step>
+                </lightning-progress-indicator>
+                </div>
+                <div class="slds-m-top_medium">
+                <div>
+                    <lightning-input value={billingStreet} type="text" label="Billing Street" 
+                    data-value={billingStreet}
+                                     onchange={handleBilling} required></lightning-input>
+                </div>
+                <div>
+                    <lightning-input value={billingCity} type="text" label="Billing City" onchange={handleCity}
+                    data-value={billingCity}
+                                     required></lightning-input>
+                </div>
+                <div>
+                    <lightning-input value={billingStateProvince} type="text" label="Billing State/Province"
+                                     onchange={handleStateProvince} data-value={billingStateProvince} required></lightning-input>
+                </div>
+                <div>
+                    <lightning-input value={billingCountry} type="text" label="Billing Country"
+                                     onchange={handleCountry} data-value={billingCountry} required></lightning-input>
+                </div>
+                <div>
+                    <lightning-input value={billingZipPostalCode} type="text" label="Billing Zip/Postal Code"
+                                     onchange={handleZipPostalCode} data-value={billingZipPostalCode} required></lightning-input>
+                </div>
+                <p class="p-message" style="color:red">{message}</p>
+                </div>
+                </div>
+            <div class="slds-m-around_medium slds-align_absolute-center">
+              <button class=" slds-button slds-button_text-destructive" 
+                onclick={previous} >Back</button>
+              <button class=" slds-button slds-button_outline-brand" 
+              onclick={next} >Next</button>
+                
+              </div></template>
+            </template>
+            <template if:true={confirmation}>
+              <div class="slds-border_top slds-border_bottom ">
+                <lightning-progress-indicator
+                  current-step="3"
+                  type="base"
+                  has-error={error}>
+                  <lightning-progress-step
+                      label="Item summary"
+                      value="1"
+                  ></lightning-progress-step>
+                  <lightning-progress-step
+                      label="Shipping summary"
+                      value="2"
+                  ></lightning-progress-step>
+                  <lightning-progress-step
+                      label="Confirmation"
+                      value="3"
+                  ></lightning-progress-step>
+              </lightning-progress-indicator>
+              </div>
+              This is your order 
+              <div class="slds-m-around_large">
+              <ul>
+                <template for:each={checkoutItems} for:index="index" for:item="item">
+                  <li key={item.cartItem_Id}>
+                  <div class="slds-grid">
+                    <div class="slds-col slds-size_10-of-12">
+                      <div >
+                      {item.cartItem_Name}
+                      </div>
+                    </div>
+                      <div class="slds-col slds-size_2-of-12">
+                        <div>
+                          <lightning-formatted-number class="slds-float_right"
+                          maximum-fraction-digits="2" format-style="currency" currency-code="EUR" value={item.cartItem_CostItem}> 
+                          </lightning-formatted-number>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  </template>
+                </ul>
+              </div>
+              <div class="slds-m-vertical_small">
+              <div class="slds-m-around-medium slds-align_absolute-center">
+              <button class=" slds-button slds-button_text-destructive" 
+                onclick={previous} >Back</button>
+                <button class=" slds-button slds-button_success " 
+                onclick={checkout} >Checkout</button>
+              </div>
+              </div>
+              </template>
+              
+            </div>
+            <div class="product-configuration">
+                <!-- uzyteczne linki -->
+              <div class="cable-config">
+                <span>Usefull information</span>
+                <br>
+                <a href="#" title="Dosage">{label.dosage}</a>
+                <br>
+                <a href="#" title="Shipping and complaints">{label.shippingandcomplatins}</a>
+                <br>
+                <a href="#" title="Storage">{label.storingdrugsandsupps}</a>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </template>
+      <template if:false={cartFlag}><main class="container"></main>
+      <div class="slds-border_top slds-border_bottom slds-text-heading_large slds-align_absolute-center" style="height: 300px;">
+        Cart is Empty.
+      </div>
+      </template>
+</template>

@@ -1,0 +1,257 @@
+
+  .container {
+    margin: 0 auto;
+    padding: 15px;
+    display: flex;
+    scrollbar-color: red !important;
+  }
+  
+  /* Columns */
+  .left-column {
+    width: 55%;
+    position: relative;
+    padding-right: 2%;
+    margin-top: 48px;
+  }
+  .left-column2 {
+    width: 65%;
+    position: relative;
+    padding-right: 2%;
+    margin-top: 20px;
+  }
+ 
+  .right-column {
+    width: 45%;
+    float: right;
+  }
+  .right-column2 {
+    width: 35%;
+    float: right;
+  }
+  
+  .product-description {
+    border-bottom: 1px solid #E1E8EE;
+    margin-bottom: 60px;
+  }
+  .product-description span {
+    font-size: 12px;
+    color: #358ED7;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .product-description h1 {
+    font-weight: 300;
+    font-size: 52px;
+    color: #43484D;
+    letter-spacing: -2px;
+  }
+  .product-description p {
+    font-size: 16px;
+    font-weight: 300;
+    color: #86939E;
+    line-height: 24px;
+  }
+  
+  /* Product Configuration */
+  .product-color span,
+  .cable-config span {
+    font-size: 14px;
+    font-weight: 400;
+    color: #86939E;
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+  
+  /* Product Color */
+  .product-color {
+    margin-bottom: 30px;
+  }
+  
+  
+  /* Cable Configuration */
+  .cable-choose {
+    margin-bottom: 20px;
+  }
+  
+  .cable-choose button {
+    border: 2px solid #E1E8EE;
+    border-radius: 6px;
+    padding: 13px 20px;
+    font-size: 14px;
+    color: #5E6977;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all .5s;
+  }
+  
+  .cable-choose button:hover,
+  .cable-choose button:active,
+  .cable-choose button:focus {
+    border: 2px solid #86939E;
+    outline: none;
+  }
+  
+  .cable-config {
+    border-bottom: 1px solid #E1E8EE;
+    margin-bottom: 20px;
+  }
+  
+  .cable-config a {
+    color: #358ED7;
+    text-decoration: none;
+    font-size: 12px;
+    position: relative;
+    margin: 10px 0;
+    display: inline-block;
+  }
+  .cable-config a:before {
+    content: "?";
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(53, 142, 215, 0.5);
+    display: inline-block;
+    text-align: center;
+    line-height: 16px;
+    opacity: 0.5;
+    margin-right: 5px;
+  }
+  
+  /* Product Price */
+  .product-price {
+    width: auto;
+  }
+  
+  .product-price span {
+    font-size: 26px;
+    font-weight: 300;
+    color: #43474D;
+    margin-right: 20px;
+  }
+  
+  .cart-btn {
+    display: inline-block;
+    background-color: #7DC855;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 12px 30px;
+    transition: all .5s;
+  }
+  .cart-btn:hover {
+    background-color: #64af3d;
+  }
+  
+  /* Responsive */
+  @media (max-width: 940px) {
+    .container {
+      flex-direction: column;
+      margin-top: 60px;
+    }
+  
+    .left-column,
+    .right-column {
+      width: 100%;
+    }
+  
+    .left-column img {
+      width: 300px;
+      right: 0;
+      top: -65px;
+      left: initial;
+    }
+  }
+  
+  @media (max-width: 535px) {
+    .left-column img {
+      width: 220px;
+      top: -85px;
+    }
+  }
+  .btn {
+    display: inline-block;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 10%;
+    line-height: 40px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0;
+    background: #69bd0a;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+.btn:hover{
+    background-color: rgb(12, 92, 5);
+}
+.input-style {
+    text-align: center;
+    border: none;
+    margin: 0;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="text"] {
+  width: 100%;
+  border: 2px solid #000;
+  border-radius: 4px;
+  margin: 8px 0;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  transition: 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #FD6B02;
+  box-shadow: 0 0 8px 0 #FD6B02;
+}
+
+.inputWithIcon input[type="text"] {
+  padding-left: 5px;
+}
+
+.inputWithIcon {
+  position: relative;
+}
+
+.inputWithIcon i {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  padding: 9px 8px;
+  color: #000;
+  transition: 0.3s;
+}
+
+.inputWithIcon input[type="text"]:focus + i {
+  color: #FD6B02;
+}
+
+.inputWithIcon.inputIconBg i {
+  background-color: #000;
+  color: #fff;
+  padding: 9px 4px;
+  border-radius: 4px 0 0 4px;
+}
+
+.inputWithIcon.inputIconBg input[type="text"]:focus + i {
+  color: #fff;
+  background-color: #FD6B02;
+}
+  

@@ -1,8 +1,6 @@
 <template>
     <template if:true={isLoading}>
-        <div style="backround-color:rgba(247, 238, 237, 0.597) !important;">
-        <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
-    </div>
+        <lightning-spinner class="spinner" size="large" alternative-text="Loading" variant="brand"></lightning-spinner>
       </template>
     <template if:true={resultsData}>
         <div style="font-size: 20px;" class="slds-text-heading_medium slds-m-around_large">
@@ -19,7 +17,7 @@
         </div>
         </div>
     </template>
-    </template>
+    </template>    
     <template if:true={pricebookEntries.data}>
         <div class="slds-border_bottom slds-m-top_large"></div>
         <div class="slds-scrollable_y">
@@ -33,6 +31,7 @@
             </lightning-layout>
         </div>
     </template>
+
     <template if:true={products}>
         <div class="slds-scrollable_y">
             <lightning-layout horizontal-align="center" multiple-rows>

@@ -4,10 +4,11 @@
             <lightning-input type="text" label=" " value={searchTerm} 
             onchange={handleSearch} class="myheader"></lightning-input>
             <div onclick={setSearch}
-                 class="slds-button slds-button_neutral" style="height: 50%;">Search
+                 class="slds-button slds-button_neutral" style="height: 50%;">{label.search}
             </div>
         </div>
     </header>
+    
     <div class="slds-border_bottom"></div>
     <div>
         <c-search-results onloading={handleLoading}

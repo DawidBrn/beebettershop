@@ -1,6 +1,12 @@
 <template>
-    <p class="slds-hidden">{cartItemsAmount}</p>
-    <div>
-        
-    </div>
+    <template if:false={isGuestUser}>
+        <div class="slds-m-top_medium slds-align_absolute-center">
+            <div class="cart" onclick={goToCart}>
+                <template if:true={cartFlag}>
+                    <p class="cart-with-items">{cartItemCount}</p>
+                </template>
+        <lightning-icon icon-name="utility:cart" size="medium" class="anchor slds-p-bottom_medium"></lightning-icon>
+            </div>
+        </div>
+    </template>
 </template>

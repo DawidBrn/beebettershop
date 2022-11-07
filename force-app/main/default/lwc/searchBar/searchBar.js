@@ -2,6 +2,7 @@ import {LightningElement, wire, track} from 'lwc';
 import { subscribe,publish, MessageContext } from 'lightning/messageService';
 import beebetterChannel from '@salesforce/messageChannel/beebetterChannel__c';
 
+
 import search from '@salesforce/label/c.Search_button';
 
 export default class SearchBar extends LightningElement {
@@ -29,7 +30,6 @@ export default class SearchBar extends LightningElement {
         const prod = {
             searchQuery : this.searchTerm
         };
-        console.log('searchbar text ' + this.searchTerm);
         publish(this.messageContext, beebetterChannel, prod);
     }
 }

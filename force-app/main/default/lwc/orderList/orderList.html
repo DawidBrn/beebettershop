@@ -1,0 +1,44 @@
+<template>
+    <template if:true={activeOrders.data}>
+        <div class="slds-scrollable_y">
+            <lightning-layout horizontal-align="center" multiple-rows>
+                <template for:each={activeOrders.data} for:item="order">
+                    <lightning-layout-item key={order.Id} padding="around-small" size="12" small-device-size="12"
+                                           medium-device-size="12" large-device-size="8">
+                    <div class="slds-grid"> <div class="slds-col slds-size_3-of-12">
+                        <h1> Order Number {order.OrderNumber}</h1> </div>
+                        <div class="slds-col slds-size_3-of-12"><h1>Order date: {order.CreatedDate}</h1></div> 
+                        <div class="slds-col slds-size_3-of-12" > <h1>Total amount : <lightning-formatted-number class="slds-align_absolute-center slds-m-around_small" 
+                     maximum-fraction-digits="2" format-style="currency" currency-code="EUR" value={order.TotalAmount}> 
+                    </lightning-formatted-number>
+                        </h1></div>
+                         <div class="slds-col slds-size_3-of-12">
+                            <button class="slds-button slds-button_text-destructive" >Create new Case</button></div>
+                         </div>
+                        <div class="slds-grid">
+                        <template for:each={order.OrderItems} for:item="item">
+                            <div class="slds-col" key={item.Id}>
+                                <div class="style-orders">
+                                    <div class="div-class-orders">
+                                        <img class="style-img-orders" style="height: 100px;width:100px;" 
+                                        src={item.Product2.DisplayUrl}/>
+                                    </div>
+                                    <div class="div-class-order-details">
+                                        <h2>{item.Product2.Name}</h2>
+                                        <p>Quantity : {item.Quantity}</p>
+                                        <p>Total Cost {item.TotalPrice} EURO</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                        <hr>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </div>
+    </template>
+    <template if:true={showConnectedMessage}>
+        <h2>No orders yet</h2>
+    </template>
+</template>

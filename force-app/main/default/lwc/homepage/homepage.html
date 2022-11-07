@@ -5,7 +5,14 @@
             <li class="menu__group"><a href="/" class="menu__link r-link text-underlined">{label.home}</a></li>
             <li class="menu__group"><a href="/s/searchresults" class="menu__link r-link text-underlined">{label.products}</a></li>
             <li class="menu__group"><a href="/aboutUs" class="menu__link r-link text-underlined">{label.aboutus}</a></li>
+            <template if:true={isGuestUser}>
             <li class="menu__group"><a href="/s/login" class="menu__link r-link text-underlined">{label.signin}</a></li>
+            <li class="menu__group"><a href="/s/register" class="menu__link r-link text-underlined">{label.signup}</a></li>
+            </template>
+            <template if:false={isGuestUser}>
+              <li class="menu__group"><a href="/s/orders" class="menu__link r-link text-underlined">{label.orders}</a></li>
+              <li class="menu__group"><a href="/secur/logout.jsp" class="menu__link r-link text-underlined">{label.signout}</a></li>
+            </template>
           </ul>
         </nav>
       </div>

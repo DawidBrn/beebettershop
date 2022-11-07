@@ -1,15 +1,43 @@
 <template>
+      <template if:true={showToastBar}>
+        <div class="slds-m-top_large">
+        <div class="slds-notify_container">
+            <div class={outerClass} role="status">
+                <span class="slds-assistive-text">{type}</span>
+                <span class={innerClass} title={message}>
+                    <lightning-icon icon-name={getIconName} alternative-text="icon" styleclass="slds-icon slds-icon_small" variant="inverse" size="small"></lightning-icon>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">
+                        <lightning-formatted-rich-text value={message}>
+                        </lightning-formatted-rich-text>
+                    </h2>
+                </div>
+                <div class="slds-notify__close">
+                    <lightning-button-icon icon-name="utility:close" size="small" variant="border-filled" class="slds-button slds-button_icon slds-button_icon-inverse" alternative-text="next" onclick={closeModel} ></lightning-button-icon>
+                </div>
+            </div>
+        </div>
+      </div>
+    </template>
       <template if:true={isLoading}>
         <lightning-spinner alternative-text="Loading" size="medium" variant="brand"></lightning-spinner>
       </template>
         <main class="container">
-          <div class="left-column">
-            <img src={details_img} alt="">
+          <div class="left-column"><div class="slds-m-left_large slds-m-top_medium">
+            <img style="max-width: 488px;max-height:488px;" src={details_img} alt="">
+          </div>
           </div>
           <div class="right-column">
             <div class="product-description">
               <span>{family}</span>
               <h1>{name}</h1>
+            </div>
+            <div class="product-description" style="40px !important;">
+              <div class="slds-align_absolute-center" style="width:50%;">
+                <lightning-progress-bar  value={rating} size="large" variant="circular"></lightning-progress-bar>
+                <lightning-progress-bar value="50" size="large" variant="circular"></lightning-progress-bar>
+                </div>
             </div>
             <div class="product-price">
                 <form class="slds-m-vertical_medium">
@@ -41,27 +69,184 @@
                 <a href="#" title="Storage">{label.storingdrugsandsupps}</a>
               </div>
             </div>
-
           </div>
         </main>
         <div class="slds-grid">
-          <div class="slds-col slds-size_7-of-12">
+          <div class="slds-col slds-size_6-of-12">
             <lightning-accordion active-section-name="A">
               <lightning-accordion-section name="A" label={label.description}
                   ><div style="text-align: justify;">{desc}</div></lightning-accordion-section
               >
               <lightning-accordion-section name="B" label={label.recommendeduse}
-                  >This is the content area for section B</lightning-accordion-section
-              >
+                  ><div style="text-align: justify;">{rmd_use}</div></lightning-accordion-section>
               <lightning-accordion-section name="C" label={label.componentsofprod}
-                  >This is the content area for section C</lightning-accordion-section
-              >
+                  ><div style="text-align: justify;">{comp}</div></lightning-accordion-section>
           </lightning-accordion>
           </div>
-          <div class="slds-col slds-size_5-of-12">
-            <div class="slds-card">
-              Reviews & comments
+          <div class="slds-col slds-size_6-of-12" style="height: 25rem;">
+            <div class="slds-m-around_small">
+              <template if:false={noReviews}>
+                <div class="slds-m-around_medium slds-scrollable_y">
+                  <lightning-tabset variant="scoped">
+                    <lightning-tab label="Reviews">
+                      <template for:each={userReviews} for:item="review">
+                        <article key={review.Id} class="slds-tile slds-media">
+                          <div class="slds-media__figure">
+                            <span class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                              <img alt="" src={review.CreatedBy.SmallPhotoUrl} title="Lexee L. Jackson avatar" />
+                            </span>
+                          </div>
+                          <div  style="width: 100%" class="slds-media__body">
+                            <h3 class="slds-tile__title slds-truncate" title="Lexee L. Jackson">
+                              <div>{review.CreatedBy.Name}<div style="float:right;font-size:13px;" >
+                                <lightning-formatted-date-time year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                  minute="2-digit" value={review.CreatedDate}></lightning-formatted-date-time>
+                              </div></div>
+                              
+                            </h3>
+                            <div class="slds-tile__detail">
+                              <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">Rating : </dt>
+                                <dd class="slds-item_detail slds-truncate" title="Description for first label">{review.Rating__c}</dd>
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Comment :</dt>
+                                <dd class="slds-item_detail slds-truncate" title="Description for second label">
+                                 <lightning-formatted-rich-text value={review.Comment__c}></lightning-formatted-rich-text></dd>
+                              </dl>
+                            </div>
+                          </div>
+                          
+                        </article>
+                      </template>
+                    </lightning-tab>
+                    <lightning-tab label="Your review">
+                      <template if:true={reviewId}>
+                        <article class="slds-tile slds-media">
+                          <div class="slds-media__figure">
+                            <span class="slds-avatar slds-avatar_circle slds-avatar_medium">
+                              <img alt="" src={userReview.CreatedBy.SmallPhotoUrl} title="Lexee L. Jackson avatar" />
+                            </span>
+                          </div>
+                          <div  style="width: 100%" class="slds-media__body">
+                            <h3 class="slds-tile__title slds-truncate" title="Lexee L. Jackson">
+                              <div>{userReview.CreatedBy.Name}<div style="float:right;font-size:13px;" >
+                                <lightning-formatted-date-time year="numeric" month="numeric" day="numeric" hour="2-digit"
+                                  minute="2-digit" value={userReview.CreatedDate}></lightning-formatted-date-time>
+                              </div></div>
+                              
+                            </h3>
+                            <div class="slds-tile__detail">
+                              <dl class="slds-list_horizontal slds-wrap">
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">Rating : </dt>
+                                <dd class="slds-item_detail slds-truncate" title="Description for first label">{userReview.Rating__c}</dd>
+                                <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Comment :</dt>
+                                <dd class="slds-item_detail slds-truncate" title="Description for second label">
+                                 <lightning-formatted-rich-text value={userReview.Comment__c}></lightning-formatted-rich-text></dd>
+                              </dl>
+                            </div>
+                          </div>
+                          
+                        </article>
+                      <lightning-button-group class="slds-m-top_medium">
+                        <lightning-button label="Edit" onclick={openModal} icon-name="utility:edit"></lightning-button>
+                        <lightning-button label="Delete" variant="destructive" icon-name="utility:delete"></lightning-button>
+                    </lightning-button-group>
+                    </template>
+                    <template if:false={reviewId}>
+                      <div class="slds-text-heading_large">Rate this product</div>
+                      <div class="slds-m-around_medium">
+                        <lightning-button onclick={openModal} label="Create Review"></lightning-button>
+                      </div>
+                      </div>
+                    </template>
+                    </lightning-tab>
+                </lightning-tabset>
+                </div>
+            </template>
+            <template if:true={noReviews}>
+              <div class="slds-m-around_medium" style="height:20rem;" >
+                <lightning-tabset variant="scoped">
+                  <lightning-tab label="Reviews">
+                    <div> No reviews yet :)</div> 
+                  </lightning-tab>
+                  <lightning-tab label="Rate it">
+                    <div class="slds-text-heading_large">Rate this product</div>
+                    <div class="slds-m-around_medium">
+                      <lightning-button onclick={openModal} label="Create Review"></lightning-button>
+                  </div>
+                  </lightning-tab>
+              </lightning-tabset>
+              
+            </div>
+            </template>
             </div>
           </div>
         </div>
+        <template if:true={isModalOpen}>
+          <!-- Modal/Popup Box LWC starts here -->
+          <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+              <div class="slds-modal__container">
+                  <!-- Modal/Popup Box LWC header here -->
+                  <header class="slds-modal__header">
+                      <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                          <lightning-icon icon-name="utility:close"
+                              alternative-text="close"
+                              variant="inverse"
+                              size="small" ></lightning-icon>
+                          <span class="slds-assistive-text">Close</span>
+                      </button>
+                      <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create Review</h2>
+                  </header>
+                  <!-- Modal/Popup Box LWC body starts here -->
+                  <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <template if:true={reviewId}>
+                      <lightning-record-edit-form record-id={reviewId} onsubmit={handleSubmit} density="comfy" object-api-name="ProductReview__c">
+                        <lightning-combobox
+                          name="Rating"
+                          label="Rating"
+                          value={value}
+                          options={options}
+                          onchange={handleChange} ></lightning-combobox>
+                        <lightning-input-field field-name="Comment__c"></lightning-input-field>
+                        <div class="slds-hidden" style="height:20px;">
+                        <lightning-input-field style="width: 10%;" field-name="Rating__c" value={newrating}></lightning-input-field>
+                        <lightning-input-field field-name="Product__c" value={recordId} disabled hidden></lightning-input-field>
+                        </div>
+                        <lightning-button
+                        class="slds-m-top_xx-small"
+                        type="submit"
+                        label="Create new">
+                      </lightning-button>
+                      </lightning-record-edit-form>
+                    </template>
+                    <template if:false={reviewId}>
+                      <lightning-record-edit-form onsubmit={handleSubmit} density="comfy" object-api-name="ProductReview__c">
+                        <lightning-combobox
+                          name="Rating"
+                          label="Rating"
+                          value={value}
+                          options={options}
+                          onchange={handleChange} ></lightning-combobox>
+                        <lightning-input-field field-name="Comment__c"></lightning-input-field>
+                        <div class="slds-hidden" style="height:20px;">
+                        <lightning-input-field style="width: 10%;" field-name="Rating__c" value={newrating}></lightning-input-field>
+                        <lightning-input-field field-name="Product__c" value={recordId} disabled hidden></lightning-input-field>
+                        </div>
+                        <lightning-button
+                        class="slds-m-top_xx-small"
+                        type="submit"
+                        label="Create new">
+                      </lightning-button>
+                      </lightning-record-edit-form>
+                    </template>
+                    
+                  </div>
+                  <!-- Modal/Popup Box LWC footer starts here -->
+                  <footer class="slds-modal__footer">
+                      <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                      <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                  </footer>
+              </div>
+          </section>
+          <div class="slds-backdrop slds-backdrop_open"></div>
+      </template>
 </template>
