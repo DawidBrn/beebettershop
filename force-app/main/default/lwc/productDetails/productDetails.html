@@ -33,10 +33,10 @@
               <span>{family}</span>
               <h1>{name}</h1>
             </div>
-            <div class="product-description" style="40px !important;">
-              <div class="slds-align_absolute-center" style="width:50%;">
-                <lightning-progress-bar  value={rating} size="large" variant="circular"></lightning-progress-bar>
-                <lightning-progress-bar value="50" size="large" variant="circular"></lightning-progress-bar>
+            <div>
+              <div style="width:50%;">
+                <lightning-progress-bar style="
+                  --lwc-progressBarColorBackgroundFill: rgb(23, 0, 128);" value={rating} size="large" variant="circular">AAAA</lightning-progress-bar>
                 </div>
             </div>
             <div class="product-price">
@@ -137,7 +137,7 @@
                             <div class="slds-tile__detail">
                               <dl class="slds-list_horizontal slds-wrap">
                                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">Rating : </dt>
-                                <dd class="slds-item_detail slds-truncate" title="Description for first label">{userReview.Rating__c}</dd>
+                                <dd class="slds-item_detail slds-truncate" title="Description for first label">{userReview.Rating__c} / 5</dd>
                                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Comment :</dt>
                                 <dd class="slds-item_detail slds-truncate" title="Description for second label">
                                  <lightning-formatted-rich-text value={userReview.Comment__c}></lightning-formatted-rich-text></dd>
@@ -166,10 +166,10 @@
               <div class="slds-m-around_medium" style="height:20rem;" >
                 <lightning-tabset variant="scoped">
                   <lightning-tab label="Reviews">
-                    <div> No reviews yet :)</div> 
+                    <div class="slds-text-heading_large"> No reviews for this item yet.</div> 
                   </lightning-tab>
-                  <lightning-tab label="Rate it">
-                    <div class="slds-text-heading_large">Rate this product</div>
+                  <lightning-tab label="Your Review">
+                    <div class="slds-text-heading_large">Review this product</div>
                     <div class="slds-m-around_medium">
                       <lightning-button onclick={openModal} label="Create Review"></lightning-button>
                   </div>
