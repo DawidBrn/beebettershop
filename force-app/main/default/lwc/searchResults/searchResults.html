@@ -11,10 +11,19 @@
     </template>
     <template if:true={aftersearch}>
     <template if:false={resultsData}>
+        
         <div style="font-size: 20px;" class="slds-text-heading_medium slds-m-around_large">
             <div class="slsd-m-around_large">
-                <h2>{label.noofresults}{resultSize}</h2>
+                <h2>{label.noofresults}{resultSize} <div style="float: right;">
+                    <ul class="slds-list_horizontal">
+                        <li><div class="slds-m-horizontal_small slds-m-top_xx-small">You searched for : " {searchTerm} " </div> </li>
+                        <li><lightning-button onclick={clear} class="slds-button" icon-name="utility:clear" label="Clear"></lightning-button></li>
+                      </ul>
+                    </div>
+                    </h2>
+            
         </div>
+        
         </div>
     </template>
     </template>    

@@ -166,7 +166,7 @@ export default class ProductCartItems extends NavigationMixin(LightningElement) 
         if(this.checkoutItems[index].cartItem_Quantity>0){
             this.checkoutItems[index].cartItem_Quantity--;
         }
-        
+        this.newCost();
     }
     incQuantity(){
         const id = event.target.dataset.id;

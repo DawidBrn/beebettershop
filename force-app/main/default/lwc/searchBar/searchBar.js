@@ -1,7 +1,7 @@
 import {LightningElement, wire, track} from 'lwc';
 import { subscribe,publish, MessageContext } from 'lightning/messageService';
 import beebetterChannel from '@salesforce/messageChannel/beebetterChannel__c';
-
+import allproducts from '@salesforce/apex/searchResultController.getAllProducts';
 
 import search from '@salesforce/label/c.Search_button';
 
@@ -13,7 +13,6 @@ export default class SearchBar extends LightningElement {
 
     @wire(MessageContext)
     messageContext;
-
     isLoading = false;
     searchTerm = '';
     handleLoading() {
@@ -31,5 +30,6 @@ export default class SearchBar extends LightningElement {
             searchQuery : this.searchTerm
         };
         publish(this.messageContext, beebetterChannel, prod);
+        this.searchTerm = "";
     }
 }

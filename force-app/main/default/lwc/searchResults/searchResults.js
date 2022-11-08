@@ -1,5 +1,7 @@
 import { LightningElement,track, api ,wire } from 'lwc';
 import { subscribe,publish, MessageContext } from 'lightning/messageService';
+import { refreshApex } from '@salesforce/apex';
+
 import beebetterChannel from '@salesforce/messageChannel/beebetterChannel__c';
 import searchByName from '@salesforce/apex/searchResultController.searchByName';
 import getAllProducts from '@salesforce/apex/searchResultController.getAllProducts';
@@ -22,13 +24,13 @@ export default class SearchResults extends LightningElement {
     filerValue;
     filterdEntries;
     subscription = null;
-
+    disabled = false;
     @wire(MessageContext)
     messageContext;
     searchTerm;
 
     @track
-    pricebookEntries;
+    pricebookEntries = [];
     @track
     resultsData = false;
     @track
@@ -83,17 +85,32 @@ export default class SearchResults extends LightningElement {
             }
         }
     }
-
+    @track
+    wiredDataResult = [];
     @wire(getAllProducts)
-    getAllProducts({data}){
-        if(data){
+    getAllProducts(result){
+        this.wiredDataResult = result;
+        if(result.data){
             this.products = true;
-            this.pricebookEntries = data;
+            this.pricebookEntries = result.data;
         }
         this.isLoading = false;
     }
     
     sendMessageService(prodId) {
         publish(this.messageContext, beebetterChannel, {recordId: prodId});
+    }
+
+    clear(){
+        this.isLoading = true;
+        refreshApex(this.wiredDataResult)
+        .then(() => {
+            this.pricebookEntries = this.wiredDataResult.data;
+            this.products = true;
+        })
+        .then(() => {
+            this.aftersearch = false;
+            this.isLoading = false;
+        })
     }
 }

@@ -80,8 +80,6 @@ export default class ProductDetails extends LightningElement {
 
     connectedCallback(){
         this.recordId=this.recordIdFromState;
-        console.log('recordId' + this.recordId);
-        console.log('userId' + this.userId);
     }
 
     get recordIdState(){
@@ -93,10 +91,8 @@ export default class ProductDetails extends LightningElement {
 
     @wire(getReviews,{id:'$recordId'})
     userReviews({error,data}){
-        console.log('data' + data);
         if(data){
         this.userReviews = data;
-        console.log('userReviews' + JSON.stringify(this.userReviews));
         this.noReviews = false;
         }else{
              this.noReviews = true;
@@ -107,9 +103,7 @@ export default class ProductDetails extends LightningElement {
     userReview({error,data}){
         if(data){
             this.userReview = data[0];   
-            console.log('userReview' + JSON.stringify(this.userReview));
             this.reviewId=data[0].Id;
-            console.log('reviewId' + this.reviewId);
         }
     }
 
@@ -117,7 +111,6 @@ export default class ProductDetails extends LightningElement {
     avgRating(result){
         if(result){
             this.rating = result.data * 20;
-            console.log('this.rating:', this.rating);
         }else{
             this.rating = 0;
         }
@@ -159,14 +152,18 @@ export default class ProductDetails extends LightningElement {
     }
 
     addItemToCart(){
+        this.isLoading = true;
         this.cartItemCount++;
         const load = {
             item : this.wiredRecords.data,
             cartItemCount : this.cartItemCount,
             itemCount: this.quantity
         };
+        this.quantity = 1;
+        console.log(this.quantity);
         this.sendMessageService(load);
         this.showToast('success','<strong>Item added to cart<strong/>','utility:success',3000);
+        this.isLoading = false;
     }
     
 
@@ -239,7 +236,6 @@ export default class ProductDetails extends LightningElement {
     handleChange(event) {
         this.value = event.detail.value;
         this.newrating = event.detail.value;
-        console.log(this.newrating);
     }
     handleSubmit(event){
         event.preventDefault();
@@ -250,7 +246,6 @@ export default class ProductDetails extends LightningElement {
     }
     handleSucess(event){
         const updatedRecord = event.detail.id;
-        console.log('onsuccess: ', updatedRecord);
      }
 
 }
