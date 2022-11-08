@@ -1,9 +1,10 @@
 import { LightningElement,api,wire,track } from 'lwc';
 import { CurrentPageReference,NavigationMixin } from 'lightning/navigation';
+import orderNumber from '@salesforce/apex/orderController.getOrderNumber';
 export default class OrderFinishedScreen extends NavigationMixin(LightningElement)  {
 
     recordId;
-
+    ordN;
     @wire(CurrentPageReference)
     currentPageReference; 
 
@@ -12,10 +13,18 @@ export default class OrderFinishedScreen extends NavigationMixin(LightningElemen
             this.currentPageReference.state.recordId; 
     }
 
-    connectedCallback()
-    {
+    connectedCallback(){
         this.recordId=this.recordIdFromState;
         console.log(this.recordId);
+        this.orderNumber();
+    }
+
+    orderNumber(){
+        getOrderNumber({id : '$recordId'}).then((result) => {
+            console.log(result);
+            this.ordN = result.data;
+        });
+        
     }
 
     get recordIdState(){

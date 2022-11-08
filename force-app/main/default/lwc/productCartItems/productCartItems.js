@@ -264,20 +264,24 @@ export default class ProductCartItems extends NavigationMixin(LightningElement) 
     }
 
     
-    handleBilling() {
-        this.billingStreet = event.target.dataset.billingStreet;
+    handleBilling(event) {
+        this.billingStreet = event.target.value;
+        console.log(this.billingStreet);
     }
-    handleCity() {
-        this.billingCity = event.target.dataset.billingCity;
+    handleCity(event) {
+        this.billingCity = event.target.value;
+        console.log(this.billingCity);
     }
-    handleStateProvince() {
-        this.billingStateProvince = event.target.dataset.billingStateProvince;
+    handleStateProvince(event) {
+        this.billingStateProvince = event.target.value;
+        console.log(this.billingProvince);
     }
-    handleCountry() {
-        this.billingCountry = event.target.dataset.billingCountry;
+    handleCountry(event) {
+        this.billingCountry = event.target.value;
+        console.log(this.billingCountry);
     }
-    handleZipPostalCode() {
-        this.billingZipPostalCode = event.target.dataset.billingZipPostalCode;
+    handleZipPostalCode(event) {
+        this.billingZipPostalCode = event.target.value;
     }
 
     

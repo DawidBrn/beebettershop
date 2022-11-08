@@ -33,11 +33,11 @@
               <span>{family}</span>
               <h1>{name}</h1>
             </div>
-            <div>
-              <div style="width:50%;">
-                <lightning-progress-bar style="
-                  --lwc-progressBarColorBackgroundFill: rgb(23, 0, 128);" value={rating} size="large" variant="circular">AAAA</lightning-progress-bar>
-                </div>
+            <div class="slds-m-left_xx-large" style="padding-left: 12%;">
+                <div class="half-arc slds-m-left_large" style={style}>
+                    <span style="padding-left: 42%;" class="label">{displayRating} % </span>
+                  </div>
+                  Recommendation Rate
             </div>
             <div class="product-price">
                 <form class="slds-m-vertical_medium">
@@ -88,7 +88,7 @@
               <template if:false={noReviews}>
                 <div class="slds-m-around_medium slds-scrollable_y">
                   <lightning-tabset variant="scoped">
-                    <lightning-tab label="Reviews">
+                    <lightning-tab onclick={getAllReviews} label="Reviews">
                       <template for:each={userReviews} for:item="review">
                         <article key={review.Id} class="slds-tile slds-media">
                           <div class="slds-media__figure">
@@ -102,12 +102,11 @@
                                 <lightning-formatted-date-time year="numeric" month="numeric" day="numeric" hour="2-digit"
                                   minute="2-digit" value={review.CreatedDate}></lightning-formatted-date-time>
                               </div></div>
-                              
                             </h3>
                             <div class="slds-tile__detail">
                               <dl class="slds-list_horizontal slds-wrap">
                                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="First Label">Rating : </dt>
-                                <dd class="slds-item_detail slds-truncate" title="Description for first label">{review.Rating__c}</dd>
+                                <dd class="slds-item_detail slds-truncate" title="Description for first label">{review.Rating__c} / 5</dd>
                                 <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Second Label">Comment :</dt>
                                 <dd class="slds-item_detail slds-truncate" title="Description for second label">
                                  <lightning-formatted-rich-text value={review.Comment__c}></lightning-formatted-rich-text></dd>
@@ -146,10 +145,10 @@
                           </div>
                           
                         </article>
-                      <lightning-button-group class="slds-m-top_medium">
+                      <div class="slds-m-top_medium">
                         <lightning-button label="Edit" onclick={openModal} icon-name="utility:edit"></lightning-button>
-                        <lightning-button label="Delete" variant="destructive" icon-name="utility:delete"></lightning-button>
-                    </lightning-button-group>
+                        <lightning-button label="Delete" variant="destructive" onclick={deleteCom} data-id={userReview.Id} icon-name="utility:delete"></lightning-button>
+                    </div>
                     </template>
                     <template if:false={reviewId}>
                       <div class="slds-text-heading_large">Rate this product</div>
@@ -165,7 +164,7 @@
             <template if:true={noReviews}>
               <div class="slds-m-around_medium" style="height:20rem;" >
                 <lightning-tabset variant="scoped">
-                  <lightning-tab label="Reviews">
+                  <lightning-tab onclick={getAllReviews} label="Reviews">
                     <div class="slds-text-heading_large"> No reviews for this item yet.</div> 
                   </lightning-tab>
                   <lightning-tab label="Your Review">
@@ -199,7 +198,7 @@
                   <!-- Modal/Popup Box LWC body starts here -->
                   <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                     <template if:true={reviewId}>
-                      <lightning-record-edit-form record-id={reviewId} onsubmit={handleSubmit} density="comfy" object-api-name="ProductReview__c">
+                      <lightning-record-edit-form record-id={reviewId} onsuccess={handleSucess} onsubmit={handleSubmit2} density="comfy" object-api-name="ProductReview__c">
                         <lightning-combobox
                           name="Rating"
                           label="Rating"
@@ -210,16 +209,17 @@
                         <div class="slds-hidden" style="height:20px;">
                         <lightning-input-field style="width: 10%;" field-name="Rating__c" value={newrating}></lightning-input-field>
                         <lightning-input-field field-name="Product__c" value={recordId} disabled hidden></lightning-input-field>
+                        <lightning-input-field field-name="CreatedById" ></lightning-input-field>
                         </div>
                         <lightning-button
                         class="slds-m-top_xx-small"
                         type="submit"
-                        label="Create new">
+                        label="Submit">
                       </lightning-button>
                       </lightning-record-edit-form>
                     </template>
                     <template if:false={reviewId}>
-                      <lightning-record-edit-form onsubmit={handleSubmit} density="comfy" object-api-name="ProductReview__c">
+                      <lightning-record-edit-form onsubmit={handleSubmit} onsuccess={handleSucess} density="comfy" object-api-name="ProductReview__c">
                         <lightning-combobox
                           name="Rating"
                           label="Rating"
@@ -231,20 +231,17 @@
                         <lightning-input-field style="width: 10%;" field-name="Rating__c" value={newrating}></lightning-input-field>
                         <lightning-input-field field-name="Product__c" value={recordId} disabled hidden></lightning-input-field>
                         </div>
+                        <div style="float:right;">
                         <lightning-button
                         class="slds-m-top_xx-small"
                         type="submit"
                         label="Create new">
-                      </lightning-button>
+                        </lightning-button>
+                        </div>
                       </lightning-record-edit-form>
                     </template>
                     
                   </div>
-                  <!-- Modal/Popup Box LWC footer starts here -->
-                  <footer class="slds-modal__footer">
-                      <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
-                      <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
-                  </footer>
               </div>
           </section>
           <div class="slds-backdrop slds-backdrop_open"></div>

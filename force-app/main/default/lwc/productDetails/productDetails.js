@@ -1,14 +1,16 @@
 import { LightningElement,api,track,wire } from 'lwc';
 import { getSObjectValue } from '@salesforce/apex';
+import { subscribe, publish , MessageContext } from 'lightning/messageService';
+import { CurrentPageReference } from 'lightning/navigation';
+import { refreshApex } from '@salesforce/apex';
 import beebetterChannel from '@salesforce/messageChannel/beebetterChannel__c';
 import cartChannel from '@salesforce/messageChannel/cartChannel__c';
-import { subscribe, publish , MessageContext } from 'lightning/messageService';
 import getProductById from '@salesforce/apex/searchResultController.getProductById';
-import { CurrentPageReference } from 'lightning/navigation';
 import Id from '@salesforce/user/Id';
 import getUserReview from '@salesforce/apex/reviewController.getUserReview';
 import getReviews from '@salesforce/apex/reviewController.getReviews';
 import getAvgRating from '@salesforce/apex/reviewController.getAvgRating';
+import deleteComment from '@salesforce/apex/reviewController.deleteComment';
 
 import NAME_FIELD from '@salesforce/schema/PricebookEntry.Product2.Name';
 import COMP from '@salesforce/schema/PricebookEntry.Product2.Composition__c';
@@ -44,7 +46,8 @@ export default class ProductDetails extends LightningElement {
     };
     userId = Id;
     @track isLoading = false;
-
+    @track
+    displayRating = 0;
     recordId;
     sellingPrice;
     quantity = 1;
@@ -60,6 +63,7 @@ export default class ProductDetails extends LightningElement {
     photoUrl;
     @track
     photoUrls = [];
+    @track
     noReviews = true;
     rating = 0;
     
@@ -99,8 +103,23 @@ export default class ProductDetails extends LightningElement {
         }
     }
 
+    getAllReviews(){
+        console.log('here1');
+        getReviews().then(({error,data}) => {
+            console.log('here');
+            if(data){
+                this.userReviews = data;
+                this.noReviews = false;
+                }else{
+                     this.noReviews = true;
+                }
+                console.log('there');
+        })
+    }
+
     @wire(getUserReview,{id:'$userId', prodId:'$recordId'})
     userReview({error,data}){
+        this.wiredDataResult = data;
         if(data){
             this.userReview = data[0];   
             this.reviewId=data[0].Id;
@@ -110,12 +129,19 @@ export default class ProductDetails extends LightningElement {
     @wire(getAvgRating,{id:'$recordId'})
     avgRating(result){
         if(result){
-            this.rating = result.data * 20;
-        }else{
-            this.rating = 0;
+        this.rating = result.data ;
+        this.rating = parseFloat(this.rating).toFixed(0);
+        switch(this.rating){
+            case '1' : this.style = '--percentage:20%;';this.displayRating = 20; break;
+            case '2' : this.style = '--percentage:40%;';this.displayRating = 40; break;
+            case '3' : this.style = '--percentage:60%;';this.displayRating = 60; break;
+            case '4' : this.style = '--percentage:80%;';this.displayRating = 80; break;
+            case '5' : this.style = '--percentage:100%;';this.displayRating = 100; break;
+            default : this.style = '--percentage:3%;';this.displayRating = 0; break;
         }
-        
+        }
     }
+    
 
     incQuantity() {
         this.quantity++;
@@ -160,7 +186,6 @@ export default class ProductDetails extends LightningElement {
             itemCount: this.quantity
         };
         this.quantity = 1;
-        console.log(this.quantity);
         this.sendMessageService(load);
         this.showToast('success','<strong>Item added to cart<strong/>','utility:success',3000);
         this.isLoading = false;
@@ -211,6 +236,26 @@ export default class ProductDetails extends LightningElement {
     get price() {
         return this.wiredRecords.data ? this.quantity * getSObjectValue(this.wiredRecords.data, PRICE_FIELD) : '';
     }
+
+    deleteCom(){
+        console.log(event.target.dataset.id);
+        let id = event.target.dataset.id;
+        deleteComment({id : id}).then((result) => {
+            console.log(result);
+        });
+        this.noReviews = true;
+        refreshApex(this.rating);
+        this.rating = parseFloat(this.rating).toFixed(0);
+        switch(this.rating){
+            case '1' : this.style = '--percentage:20%;';this.displayRating = 20; break;
+            case '2' : this.style = '--percentage:40%;';this.displayRating = 40; break;
+            case '3' : this.style = '--percentage:60%;';this.displayRating = 60; break;
+            case '4' : this.style = '--percentage:80%;';this.displayRating = 80; break;
+            case '5' : this.style = '--percentage:100%;';this.displayRating = 100; break;
+            default : this.style = '--percentage:3%;';this.displayRating = 0; break;
+        }
+    }
+
     @track isModalOpen = false;
     openModal() {
         this.isModalOpen = true;
@@ -221,31 +266,86 @@ export default class ProductDetails extends LightningElement {
     submitDetails() {
         this.isModalOpen = false;
     }
-    value = 'inProgress';
+    value = 0;
     newrating = 0;
+    @track
+    style = '';
     get options() {
         return [
-            { label: '1 - Bad', value: 1 },
-            { label: '2 - Not so bad', value: 2 },
-            { label: '3 - Would recommend', value: 3 },
-            { label: '4 - Highly recommend', value: 4 },
-            { label: '5 - Amazing', value: 5 }
+            { label: '1 - Bad', value: '1' },
+            { label: '2 - Not so bad', value: '2' },
+            { label: '3 - Would recommend', value: '3' },
+            { label: '4 - Highly recommend', value: '4' },
+            { label: '5 - Amazing', value: '5' }
         ];
     }
 
     handleChange(event) {
         this.value = event.detail.value;
-        this.newrating = event.detail.value;
+        switch(this.value){
+            case '1' : this.newrating = 1;  break;
+            case '2' : this.newrating = 2; break;
+            case '3' : this.newrating = 3; break;
+            case '4' : this.newrating = 4; break;
+            case '5' : this.newrating = 5; break;
+            default : this.newrating = 0; break;
+        }
     }
+    @track
+    wiredDataResult;
     handleSubmit(event){
         event.preventDefault();
         this.isModalOpen = false;
-        const fields = event.detail.fields;
+        let fields = event.detail.fields;
+        if(this.reviewId!=null && this.reviewId != undefined){
+            const objCopy = {...this.userReview};
+            objCopy.Comment__c = fields.Comment__c;
+            objCopy.Rating__c = fields.Rating__c;
+            this.userReview = objCopy;
+        }
         this.showToast('success','<strong>Added your rating <strong/>','utility:success',3000);
         this.template.querySelector('lightning-record-edit-form').submit(fields);
+        refreshApex(this.userReview);
+        refreshApex(this.rating);
+        this.rating = parseFloat(this.rating).toFixed(0);
+        console.log(this.rating);
+        switch(this.rating){
+            case '1' : this.style = '--percentage:20%;';this.displayRating = 20; break;
+            case '2' : this.style = '--percentage:40%;';this.displayRating = 40; break;
+            case '3' : this.style = '--percentage:60%;';this.displayRating = 60; break;
+            case '4' : this.style = '--percentage:80%;';this.displayRating = 80; break;
+            case '5' : this.style = '--percentage:100%;';this.displayRating = 100; break;
+            default : this.style = '--percentage:3%;';this.displayRating = 0; break;
+        }
+    }
+    handleSubmit2(event){
+        event.preventDefault();
+        this.isModalOpen = false;
+        let fields = event.detail.fields;
+        if(this.reviewId!=null && this.reviewId != undefined){
+            const objCopy = {...this.userReview};
+            objCopy.Comment__c = fields.Comment__c;
+            objCopy.Rating__c = fields.Rating__c;
+            this.userReview = objCopy;
+        }
+        this.showToast('success','<strong>Edited your rating <strong/>','utility:success',3000);
+        this.template.querySelector('lightning-record-edit-form').submit(fields);
+        refreshApex(this.userReview);
+        refreshApex(this.rating);
+        this.rating = parseFloat(this.rating).toFixed(0);
+        console.log(this.rating);
+        switch(this.rating){
+            case '1' : this.style = '--percentage:20%;';this.displayRating = 20; break;
+            case '2' : this.style = '--percentage:40%;';this.displayRating = 40; break;
+            case '3' : this.style = '--percentage:60%;';this.displayRating = 60; break;
+            case '4' : this.style = '--percentage:80%;';this.displayRating = 80; break;
+            case '5' : this.style = '--percentage:100%;';this.displayRating = 100; break;
+            default : this.style = '--percentage:3%;';this.displayRating = 0; break;
+        }
     }
     handleSucess(event){
         const updatedRecord = event.detail.id;
+        console.log('onsuccess: ', updatedRecord);
      }
 
 }

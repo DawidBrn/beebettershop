@@ -32,7 +32,22 @@ public with sharing class reviewController {
         List<AggregateResult> reviewRating = [
             SELECT AVG(Rating__c) FROM ProductReview__c WHERE Product__c =: id
         ];
-        Decimal strToDec = decimal.valueOf(JSON.serialize(reviewRating[0].get('expr0')));
-        return strToDec;
+        if(!reviewRating.isEmpty()){
+            Decimal strToDec = decimal.valueOf(JSON.serialize(reviewRating[0].get('expr0')));
+            return strToDec;
+        }else{
+            return 0;
+        }
+        
+    }
+    @AuraEnabled
+    public static string deleteComment(String id){
+        try {
+            ProductReview__c prodrev = [SELECT id FROM ProductReview__c WHERE id =: id];
+            delete prodrev;
+            return 'ok';
+        }catch (DMLException e) {
+            return e.getMessage();
+        }
     }
 }
