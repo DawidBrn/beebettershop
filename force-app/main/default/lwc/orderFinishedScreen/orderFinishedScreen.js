@@ -16,16 +16,13 @@ export default class OrderFinishedScreen extends NavigationMixin(LightningElemen
     connectedCallback(){
         this.recordId=this.recordIdFromState;
         console.log(this.recordId);
-        this.orderNumber();
     }
 
-    orderNumber(){
-        getOrderNumber({id : '$recordId'}).then((result) => {
-            console.log(result);
-            this.ordN = result.data;
-        });
-        
+    @wire(orderNumber,{id : '$recordId'})
+    order(result){
+        this.ordN = result.data;
     }
+    
 
     get recordIdState(){
         return this.recordId;

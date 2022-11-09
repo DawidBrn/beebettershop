@@ -74,6 +74,21 @@ export default class ProductCartItems extends NavigationMixin(LightningElement) 
     hideModalBox() {  
         this.isShowModal = false;
     }
+    @track isCheckoutOpen = false;
+    openCheckout() {
+        // to open modal set isModalOpen tarck value as true
+        this.isCheckoutOpen = true;
+    }
+    closeCheckout() {
+        // to close modal set isModalOpen tarck value as false
+        this.isCheckoutOpen = false;
+    }
+    submitDetails() {
+        // to close modal set isModalOpen tarck value as false
+        //Add your code to call apex method or do some processing
+        this.isModalOpen = false;
+        this.showToast('success','<strong>Order fullfiled<strong/>','utility:success',300);
+    }
 
     @wire(CurrentPageReference)
     currentPageReference; 

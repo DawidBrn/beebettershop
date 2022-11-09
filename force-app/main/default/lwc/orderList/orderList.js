@@ -12,6 +12,27 @@ export default class OrderList extends LightningElement {
         this.userId = Id;
     }
 
+    @track isCaseOpen = false;
+    @track isShippingOpen = false;
+    openCase() {
+        // to open modal set isModalOpen tarck value as true
+        this.isCaseOpen = true;
+    }
+    closeCase() {
+        // to close modal set isModalOpen tarck value as false
+        this.isCaseOpen = false;
+    }
+    
+    openShipping() {
+        // to open modal set isModalOpen tarck value as true
+        this.isShippingOpen = true;
+    }
+    closeShipping() {
+        // to close modal set isModalOpen tarck value as false
+        this.isShippingOpen = false;
+    }
+
+
     @wire(orders,{userId: '$userId'})
     wiredOrders(result){
         console.log('result:', result);
